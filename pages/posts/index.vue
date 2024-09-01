@@ -1,10 +1,16 @@
 <script setup>
-const { data: posts } = await useFetch('https://jsonplaceholder.typicode.com/posts')
+const { data: posts, error, pending } = await useLazyFetch('https://jsonplaceholder.typicode.com/posts')
 </script>
 
 <template>
-    <h1 class="text-3xl font-bold mb-10">Post Page</h1>
-    <section class="grid grid-cols-4 gap-10">
+    <div v-if="pending">
+        <h1 class="text-3xl font-bold mb-10">Cargando ...</h1>
+    </div>
+    <div v-else-if="error || !posts">
+        <h1 class="text-3xl font-bold mb-10">Ha ocurrido un error</h1>
+    </div>
+    
+    <div v-else class="grid grid-cols-4 gap-10">
         <article
         class="hover:animate-background rounded-xl bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 p-0.5 shadow-xl transition hover:bg-[length:400%_400%] hover:shadow-sm hover:[animation-duration:_4s]"
         v-for="{ title, id } in posts" :key="id"
@@ -17,7 +23,5 @@ const { data: posts } = await useFetch('https://jsonplaceholder.typicode.com/pos
                 </NuxtLink>
             </div>
         </article>
-
-    
-    </section>
+    </div>
 </template>
